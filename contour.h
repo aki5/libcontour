@@ -21,4 +21,4 @@ void initcontour(Contour *cp, uint8_t *img, int width, int height, int stride);
 int nextcontour(Contour *cp, int16_t *pt, int apt, int fillrule, int *idp);
 void resetcontour(Contour *cp);
 
-int fitpoly(int *poly, int apoly, int16_t *pt, int npt, int dstthr);
+int fitpoly(int *poly, int apoly, int16_t *pt, int npt, int32_t dstthr);

@@ -8,27 +8,27 @@ det2i(int a, int b, int c, int d)
 	return a*d - b*c;
 }
 
-static inline int
+static inline int32_t
 dot2i(int16_t *a, int16_t *b)
 {
 	return a[0]*b[0] + a[1]*b[1];
 }
 
 
-static inline int
+static inline int32_t
 ptptdst2(int16_t *a, int16_t *b)
 {
-	int abx, aby;
+	int32_t abx, aby;
 	abx = b[0]-a[0];
 	aby = b[1]-a[1];
 	return abx*abx + aby*aby;
 }
 
 static void
-ptsegdst2(int16_t *p, int16_t *a, int16_t *b, int *dstp2, int *dstq2)
+ptsegdst2(int16_t *p, int16_t *a, int16_t *b, int32_t *dstp2, int32_t *dstq2)
 {
 	int16_t ap[2], ab[2];
-	int tp, tq, det;
+	int32_t tp, tq, det;
 
 	tq = ptptdst2(a, b);
 	if(tq == 0){
@@ -75,10 +75,10 @@ sortput(int *tab, int len, int val)
 }
 
 static int
-findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
+findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int32_t *maxdst2p)
 {
-	int dstp2, dstq2;
-	int maxdstp2, maxdstq2;
+	int32_t dstp2, dstq2;
+	int32_t maxdstp2, maxdstq2;
 	int i, maxi;
 
 	maxdstp2 = -1;
@@ -89,7 +89,7 @@ findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
 		if(i == b)
 			break;
 		ptsegdst2(pt + 2*i, pt + 2*a, pt + 2*b, &dstp2, &dstq2);
-		if((long long)dstp2*maxdstq2 > (long long)maxdstp2*dstq2){
+		if((int64_t)dstp2*maxdstq2 > (int64_t)maxdstp2*dstq2){
 			maxdstp2 = dstp2;
 			maxdstq2 = dstq2;
 			maxi = i;
@@ -98,7 +98,7 @@ findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
 	if(i == npt){
 		for(i = 0; i != b; i++){
 			ptsegdst2(pt + 2*i, pt + 2*a, pt + 2*b, &dstp2, &dstq2);
-			if((long long)dstp2*maxdstq2 > (long long)maxdstp2*dstq2){
+			if((int64_t)dstp2*maxdstq2 > (int64_t)maxdstp2*dstq2){
 				maxdstp2 = dstp2;
 				maxdstq2 = dstq2;
 				maxi = i;
@@ -121,14 +121,14 @@ findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
  *	   but the generated segments must not intersect any of the old segments
  */ 
 int
-fitpoly(int *poly, int apoly, int16_t *pt, int npt, int dstthr)
+fitpoly(int *poly, int apoly, int16_t *pt, int npt, int32_t dstthr)
 {
 	int i, j, npoly, pi, ni;
-	int dst2, maxdst2, maxi;
+	int32_t dst2, maxdst2, maxi;
 	int16_t cntr[2], *cpt = cntr;
 
 	int polymaxi[apoly];
-	int polymaxdst2[apoly];
+	int32_t polymaxdst2[apoly];
 
 	if(npt < 2)
 		return -1;
@@ -163,8 +163,8 @@ fitpoly(int *poly, int apoly, int16_t *pt, int npt, int dstthr)
 
 	while(npoly < apoly){
 
-		int maxi2 = -1;
-		int maxd2 = -1;
+		int32_t maxi2 = -1;
+		int32_t maxd2 = -1;
 		for(i = 0; i < npoly; i++){
 			if(polymaxdst2[i] > maxd2){
 				maxd2 = polymaxdst2[i];
