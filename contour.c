@@ -1,11 +1,10 @@
 
+#include <stdint.h>
 #include <string.h>
 #include "contour.h"
 
-typedef unsigned int u32int;
-
 void
-initcontour(Contour *cp, uchar *img, int width, int height, int st)
+initcontour(Contour *cp, uint8_t *img, int width, int height, int st)
 {
 	int i;
 
@@ -49,7 +48,7 @@ resetcontour(Contour *cp)
 }
 
 int
-ptappend(short *pt, int apt, int *nptp, int x, int y)
+ptappend(int16_t *pt, int apt, int *nptp, int x, int y)
 {
 	int npt = *nptp;
 	if(npt < apt){
@@ -63,9 +62,9 @@ ptappend(short *pt, int apt, int *nptp, int x, int y)
 }
 
 int
-nextcontour(Contour *cp, short *pt, int apt, int fillrule, int *idp)
+nextcontour(Contour *cp, int16_t *pt, int apt, int fillrule, int *idp)
 {
-	uchar *img;
+	uint8_t *img;
 	int cur, off, end;
 	int i, dir;
 	int npt;

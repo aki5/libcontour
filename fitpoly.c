@@ -1,4 +1,4 @@
-
+#include <stdint.h>
 #include <string.h>
 #include "contour.h"
 
@@ -9,14 +9,14 @@ det2i(int a, int b, int c, int d)
 }
 
 static inline int
-dot2i(short *a, short *b)
+dot2i(int16_t *a, int16_t *b)
 {
 	return a[0]*b[0] + a[1]*b[1];
 }
 
 
 static inline int
-ptptdst2(short *a, short *b)
+ptptdst2(int16_t *a, int16_t *b)
 {
 	int abx, aby;
 	abx = b[0]-a[0];
@@ -25,9 +25,9 @@ ptptdst2(short *a, short *b)
 }
 
 static void
-ptsegdst2(short *p, short *a, short *b, int *dstp2, int *dstq2)
+ptsegdst2(int16_t *p, int16_t *a, int16_t *b, int *dstp2, int *dstq2)
 {
-	short ap[2], ab[2];
+	int16_t ap[2], ab[2];
 	int tp, tq, det;
 
 	tq = ptptdst2(a, b);
@@ -58,7 +58,7 @@ ptsegdst2(short *p, short *a, short *b, int *dstp2, int *dstq2)
 	*dstq2 = tq;
 	return;
 /*
-	short ortpr[2];
+	int16_t ortpr[2];
 	ortpr[0] = a[0] + muldiv(ab[0], tp, tq);
 	ortpr[1] = a[1] + muldiv(ab[1], tp, tq);
 */
@@ -75,7 +75,7 @@ sortput(int *tab, int len, int val)
 }
 
 static int
-findmaxdst2(short *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
+findmaxdst2(int16_t *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
 {
 	int dstp2, dstq2;
 	int maxdstp2, maxdstq2;
@@ -121,11 +121,11 @@ findmaxdst2(short *pt, int npt, int a, int b, int *maxip, int *maxdst2p)
  *	   but the generated segments must not intersect any of the old segments
  */ 
 int
-fitpoly(int *poly, int apoly, short *pt, int npt, int dstthr)
+fitpoly(int *poly, int apoly, int16_t *pt, int npt, int dstthr)
 {
 	int i, j, npoly, pi, ni;
 	int dst2, maxdst2, maxi;
-	short cntr[2], *cpt = cntr;
+	int16_t cntr[2], *cpt = cntr;
 
 	int polymaxi[apoly];
 	int polymaxdst2[apoly];
