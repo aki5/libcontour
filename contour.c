@@ -83,13 +83,15 @@ nextcontour(Contour *cp, int16_t *pt, int apt, int fillrule, int *idp)
 	while(off < end){
 		int flags = img[off];
 		fid = flags&Fid;
+		// if pixel not already contoured, break
 		if((flags&Fcont) == 0)
 			break;
+
+		// pixel already contoured, skip over the current color.
 		do {
 			if((img[++off] & Fid) != fid)
 				break;
 		} while(off < end);
-		//off++;
 	}
 	cp->off = off;
 	if(off == end)
@@ -140,7 +142,6 @@ nextcontour(Contour *cp, int16_t *pt, int apt, int fillrule, int *idp)
 					break;
 				}
 			}
-/* this should be moved to the above loop as an "else" branch */
 			if(npt < apt){
 				int xcoord, ycoord;
 				ycoord = off / width;
@@ -172,12 +173,15 @@ nextcontour(Contour *cp, int16_t *pt, int apt, int fillrule, int *idp)
 			if(off == stop && dir == stopdir)
 				break;
 		}
+		// skip over pixels inside the contour we just traced.
+		// this is more or less what we do at the start of the next call,
+		// so consider eliminating the whole thing.
 		off = cp->off;
 		while(off < end){
 			if((img[++off] & Fid) != fid)
 				break;
 		}
-		cp->off++;
+		cp->off = off;
 	} 
 
 	*idp = fid;
